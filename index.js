@@ -9,6 +9,7 @@ server.listen(port, () => {
 });
 
 let usersCount = 0;
+let clients = [];
 
 function getConnectedClientsIds() {
     let list = [];
@@ -22,21 +23,29 @@ io.sockets.on('connection', (socket) => {
     usersCount++;
     console.log(`${socket.conn.remoteAddress} (${socket.id}) s'est connecté (${usersCount} clients)`);
 
+    console.log(clients);
+
     socket.on('user connected', (user) => {
         socket.user = user;
         socket.user.id = socket.id;
-        socket.broadcast.emit('user connected', socket.user);
+        clients.push(socket.user);
+        console.log(socket.id + "vient de se co");
+        socket.emit('user connected', socket.user);
+        socket.broadcast.emit("user joined", clients);
     });
 
     socket.on('user disconnected', (user) => {
+        usersCount--;
         socket.broadcast.emit('user disconnected', user);
-
+        clients = clients.filter(c => c.id !== user.id);
     });
 
     socket.on('disconnect', () => {
         usersCount--;
-        socket.broadcast.emit('user left');
+        clients = clients.filter(c => c.id !== socket.id);
+        socket.broadcast.emit('user left', socket.id);
         console.log(`${socket.id} s'est déconnecté (${usersCount} clients)`);
     });
+
 
 });
