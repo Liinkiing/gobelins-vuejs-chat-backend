@@ -19,7 +19,7 @@ function getConnectedClientsIds() {
 }
 
 io.sockets.on('connection', (socket) => {
-    console.log(`${socket.conn.remoteAddress} (${socket.id}) s'est connecté au scoket`);
+    console.log(`${socket.conn.remoteAddress} (${socket.id}) s'est connecté au socket`);
 
     socket.emit('getUsers', clients);
 
@@ -38,11 +38,27 @@ io.sockets.on('connection', (socket) => {
         socket.broadcast.emit('new message', message);
     });
 
+    socket.on('command', (command) => {
+        let data = {};
+        switch (command) {
+            case "/johncena":
+                data.command = "PLAY_AUDIO";
+                data.payload = "johncena";
+                break;
+        }
+        socket.emit('command issued', data);
+    });
+
     socket.on('user disconnected', (user) => {
         socket.broadcast.emit('user disconnected', user);
         socket.broadcast.emit('user left', socket.id);
         console.log(`${socket.id} s'est déconnecté du chat mais pas du socket`);
         clients = clients.filter(c => c.id !== user.id);
+    });
+
+    socket.on('wizz', (user) => {
+        console.log(user, "a envoyé un wizz");
+        socket.broadcast.emit('wizz', user);
     });
 
     socket.on('disconnect', () => {
