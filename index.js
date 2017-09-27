@@ -21,15 +21,15 @@ function getConnectedClientsIds() {
 
 io.sockets.on('connection', (socket) => {
     usersCount++;
-    console.log(`${socket.conn.remoteAddress} (${socket.id}) s'est connecté (${usersCount} clients)`);
+    console.log(`${socket.conn.remoteAddress} (${socket.id}) s'est connecté au scoket (${usersCount} clients)`);
 
-    console.log(clients);
+    socket.emit('getUsers', clients);
 
     socket.on('user connected', (user) => {
         socket.user = user;
         socket.user.id = socket.id;
         clients.push(socket.user);
-        console.log(socket.id + "vient de se co");
+        console.log(socket.id + "vient de se co au chat mais est déjà co au socket");
         socket.emit('user connected', socket.user);
         socket.broadcast.emit("user joined", clients);
     });
