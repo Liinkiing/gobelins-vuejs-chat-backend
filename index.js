@@ -8,7 +8,6 @@ server.listen(port, () => {
     console.log("Serveur lancé sur le port " + port)
 });
 
-let usersCount = 0;
 let clients = [];
 
 function getConnectedClientsIds() {
@@ -20,7 +19,6 @@ function getConnectedClientsIds() {
 }
 
 io.sockets.on('connection', (socket) => {
-    usersCount++;
     console.log(`${socket.conn.remoteAddress} (${socket.id}) s'est connecté au scoket (${usersCount} clients)`);
 
     socket.emit('getUsers', clients);
@@ -41,7 +39,6 @@ io.sockets.on('connection', (socket) => {
     });
 
     socket.on('user disconnected', (user) => {
-        usersCount--;
         socket.broadcast.emit('user disconnected', user);
         socket.broadcast.emit('user left', socket.id);
         console.log(`${socket.id} s'est déconnecté du chat mais pas du socket`);
@@ -49,10 +46,9 @@ io.sockets.on('connection', (socket) => {
     });
 
     socket.on('disconnect', () => {
-        usersCount--;
         clients = clients.filter(c => c.id !== socket.id);
         socket.broadcast.emit('user left', socket.id);
-        console.log(`${socket.id} s'est déconnecté (${usersCount} clients)`);
+        console.log(`${socket.id} s'est déconnecté`);
     });
 
 
