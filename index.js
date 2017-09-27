@@ -44,9 +44,10 @@ io.sockets.on('connection', (socket) => {
             case "/johncena":
                 data.command = "PLAY_AUDIO";
                 data.payload = "johncena";
+                socket.emit('command issued', data);
+                socket.broadcast.emit('command issued', data);
                 break;
         }
-        socket.emit('command issued', data);
     });
 
     socket.on('user disconnected', (user) => {
