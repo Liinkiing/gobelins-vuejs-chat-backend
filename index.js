@@ -19,7 +19,7 @@ function getConnectedClientsIds() {
 }
 
 io.sockets.on('connection', (socket) => {
-    console.log(`${socket.conn.remoteAddress} (${socket.id}) s'est connecté au scoket (${usersCount} clients)`);
+    console.log(`${socket.conn.remoteAddress} (${socket.id}) s'est connecté au scoket`);
 
     socket.emit('getUsers', clients);
 
