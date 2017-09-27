@@ -34,9 +34,17 @@ io.sockets.on('connection', (socket) => {
         socket.broadcast.emit("user joined", clients);
     });
 
+    socket.on('new message', (message) => {
+        console.log(socket.id + " a envoyé un message");
+        console.log(message);
+        socket.broadcast.emit('new message', message);
+    });
+
     socket.on('user disconnected', (user) => {
         usersCount--;
         socket.broadcast.emit('user disconnected', user);
+        socket.broadcast.emit('user left', socket.id);
+        console.log(`${socket.id} s'est déconnecté du chat mais pas du socket`);
         clients = clients.filter(c => c.id !== user.id);
     });
 
