@@ -10,14 +10,6 @@ server.listen(port, () => {
 
 let clients = [];
 
-function getConnectedClientsIds() {
-    let list = [];
-    for (let client in io.sockets.connected) {
-        list.push(client);
-    }
-    return list;
-}
-
 io.sockets.on('connection', (socket) => {
     console.log(`${socket.conn.remoteAddress} (${socket.id}) s'est connecté au socket`);
 
@@ -29,7 +21,7 @@ io.sockets.on('connection', (socket) => {
         clients.push(socket.user);
         console.log(socket.id + "vient de se co au chat mais est déjà co au socket");
         socket.emit('user connected', socket.user);
-        socket.broadcast.emit("user joined", clients);
+        socket.broadcast.emit("user joined", {clients, new: socket.user});
     });
 
     socket.on('new message', (message) => {
