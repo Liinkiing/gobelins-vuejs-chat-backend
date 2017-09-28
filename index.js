@@ -50,6 +50,16 @@ io.sockets.on('connection', (socket) => {
         io.sockets.emit("new message", message);
     });
 
+    socket.on('typing', (user) => {
+        console.log(user, "est en train d'écrire");
+        socket.broadcast.emit("typing", user);
+    });
+
+    socket.on('stop typing', (user) => {
+        console.log(user, "a arrêté d'écrire");
+        socket.broadcast.emit("stop typing", user);
+    });
+
     socket.on('command', (command) => {
         let data = {};
         switch (command) {
