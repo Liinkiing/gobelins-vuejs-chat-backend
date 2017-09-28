@@ -18,7 +18,7 @@ io.sockets.on('connection', (socket) => {
     socket.on('user connected', (user) => {
         socket.user = user;
         socket.user.id = socket.id;
-        clients.push(socket.user);
+        if(clients.filter(u => u.id === socket.id).length === 0) clients.push(socket.user);
         console.log(socket.id + "vient de se co au chat mais est déjà co au socket");
         socket.emit('user connected', socket.user);
         socket.broadcast.emit("user joined", {clients, new: socket.user});
@@ -55,9 +55,9 @@ io.sockets.on('connection', (socket) => {
         clients = clients.filter(c => c.id !== user.id);
     });
 
-    socket.on('wizz', (user) => {
-        console.log(user, "a envoyé un wizz");
-        socket.broadcast.emit('wizz', user);
+    socket.on('wizz', () => {
+        console.log(socket.user, "a envoyé un wizz");
+        socket.broadcast.emit('wizz', socket.user);
     });
 
     socket.on('disconnect', () => {
