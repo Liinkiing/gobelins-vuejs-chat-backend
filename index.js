@@ -1,3 +1,5 @@
+import Message from "./models/Message";
+
 let app = require('express')();
 let path = require('path');
 let server = require('http').createServer(app);
@@ -24,8 +26,9 @@ io.sockets.on('connection', (socket) => {
         socket.broadcast.emit("user joined", {clients, new: socket.user});
     });
 
-    socket.on('new message', (message) => {
+    socket.on('new message', (body) => {
         console.log(socket.id + " a envoyé un message");
+        let message = new Message(body, socket.user);
         console.log(message);
         io.sockets.emit("new message", message);
     });
