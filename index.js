@@ -9,6 +9,12 @@ class Message {
 
 }
 
+function randomColor() {
+    let colors = ["red", "rose", "light_green", "violet", "orange", "pale_red", "cyan", "dark_green",
+        "pale_green", "pale_yellow", "yellow", "blue"];
+    return colors[Math.floor(Math.random()*colors.length)];
+}
+
 let app = require('express')();
 let path = require('path');
 let server = require('http').createServer(app);
@@ -29,6 +35,8 @@ io.sockets.on('connection', (socket) => {
     socket.on('user connected', (user) => {
         socket.user = user;
         socket.user.id = socket.id;
+        socket.user.color = randomColor();
+        console.log(socket.user);
         if(clients.filter(u => u.id === socket.id).length === 0) clients.push(socket.user);
         console.log(socket.id + "vient de se co au chat mais est déjà co au socket");
         socket.emit('user connected', socket.user);
