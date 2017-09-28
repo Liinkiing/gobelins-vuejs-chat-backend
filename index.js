@@ -27,7 +27,8 @@ io.sockets.on('connection', (socket) => {
     socket.on('new message', (message) => {
         console.log(socket.id + " a envoyé un message");
         console.log(message);
-        socket.broadcast.emit('new message', message);
+        io.sockets.emit("new message", "test");
+        // socket.broadcast.emit('new message', message);
     });
 
     socket.on('command', (command) => {
