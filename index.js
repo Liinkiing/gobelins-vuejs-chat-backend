@@ -1,4 +1,13 @@
-import Message from "./models/Message";
+class Message {
+
+    constructor(body, author, isBot = false) {
+        this.body = body;
+        this.createdAt = Date.now();
+        this.author = author;
+        this.isBot = isBot;
+    }
+
+}
 
 let app = require('express')();
 let path = require('path');
