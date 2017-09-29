@@ -1,9 +1,10 @@
 class Message {
 
-    constructor(body, author, isBot = false) {
+    constructor(body, author, isBot = false, size = "medium") {
         this.body = body;
         this.createdAt = Date.now();
         this.author = author;
+        this.size = size;
         this.isBot = isBot;
     }
 
@@ -43,9 +44,9 @@ io.sockets.on('connection', (socket) => {
         socket.broadcast.emit("user joined", {clients, new: socket.user});
     });
 
-    socket.on('new message', (body) => {
+    socket.on('new message', (body, size = "medium") => {
         console.log(socket.id + " a envoyé un message");
-        let message = new Message(body, socket.user);
+        let message = new Message(body, socket.user, false, size);
         console.log(message);
         io.sockets.emit("new message", message);
     });
